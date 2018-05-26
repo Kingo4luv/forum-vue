@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Filesystem\Cache;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use App\Channel;
 

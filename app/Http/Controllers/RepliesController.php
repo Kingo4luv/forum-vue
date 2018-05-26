@@ -51,6 +51,7 @@ class RepliesController extends Controller
 
         ]);
 
+
         if (request()->expectsJson()){
             return $reply->load('user');
         }

@@ -53,9 +53,11 @@
 
                 window.scrollTo(0,0);
             },
-            add(item){
-                this.items.push(item);
+            add(reply){
+                this.items.push(reply);
                 this.$emit('added');
+
+                flash('Reply has been left');
 
 
             },
@@ -63,6 +65,7 @@
             remove(index){
                 this.items.splice(index, 1);
                 this.$emit('removed');
+                flash('Reply deleted');
 
             }
 

@@ -32,6 +32,9 @@
                         <div class="card-body">
                             This thread was published {{$thread->created_at->diffForHumans()}} by
                             <a href="#">{{$thread->user->name}}</a>, and currently has <span v-text="repliesCount"></span> {{str_plural('comment',$thread->replies_count)}}
+                            <p>
+                                <subscribe-button :active="{{json_encode($thread->isSubscribedTo)}}"></subscribe-button>
+                            </p>
                         </div>
                     </div>
                 </div>
