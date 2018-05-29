@@ -6,7 +6,7 @@
 
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
             <div v-for="notification in notifications">
-                <a class="dropdown-item" href="#" v-text="notification.data.message">foobar</a>
+                <a class="dropdown-item" href="#" v-text="notification.data.message" @click="markAsRead(notification)"></a>
             </div>
         </div>
     </li>
@@ -23,6 +23,12 @@
         created(){
             axios.get("/profile/"+ window.App.user.name + "/notifications")
                 .then(response => this.notifications = response.data);
+        },
+
+        methods:{
+            markAsRead(notification){
+                axios.delete('/profile/' + window.App.user.name + '/notifications/' + notification.id)
+            }
         }
     }
 </script>

@@ -54,6 +54,11 @@ class Reply extends Model
 
     }
 
+    public function path()
+    {
+        return $this->thread->path() . "#reply-{$this->id}";
+    }
+
     public function unfavorite(){
         $attributes = ['user_id' => auth()->id()];
         $this->favorites()->where($attributes)->get()->each->delete();

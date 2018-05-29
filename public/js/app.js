@@ -41706,7 +41706,9 @@ window.Vue = __webpack_require__(16);
 window.events = new Vue();
 
 window.flash = function (message) {
-    window.events.$emit('flash', message);
+    var level = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'success';
+
+    window.events.$emit('flash', { message: message, level: level });
 };
 
 Vue.prototype.authorize = function (handler) {
@@ -64084,6 +64086,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     data: function data() {
         return {
             body: '',
+            level: 'success',
             show: false
         };
     },
@@ -64094,15 +64097,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.flash(this.message);
         }
 
-        window.events.$on('flash', function (message) {
-            return _this.flash(message);
+        window.events.$on('flash', function (data) {
+            return _this.flash(data);
         });
     },
 
 
     methods: {
-        flash: function flash(message) {
-            this.body = message;
+        flash: function flash(data) {
+            this.body = data.message;
+            this.level = data.level;
             this.show = true;
 
             this.hide();
@@ -64132,7 +64136,8 @@ var render = function() {
       directives: [
         { name: "show", rawName: "v-show", value: _vm.show, expression: "show" }
       ],
-      staticClass: "alert alert-success flash-alert",
+      staticClass: "alert alert-flash",
+      class: "alert-" + _vm.level,
       attrs: { role: "alert" }
     },
     [_c("strong", [_vm._v("Success")]), _vm._v(" " + _vm._s(_vm.body) + "\n")]
@@ -65434,7 +65439,7 @@ exports = module.exports = __webpack_require__(3)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -65487,7 +65492,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         addReply: function addReply() {
             var _this = this;
 
-            axios.post(location.pathname + '/replies', { body: this.body }).then(function (_ref) {
+            axios.post(location.pathname + '/replies', { body: this.body }).catch(function (error) {
+                flash(error.response.data, 'danger');
+            }).then(function (_ref) {
                 var data = _ref.data;
 
                 _this.body = '';
@@ -65872,7 +65879,7 @@ exports = module.exports = __webpack_require__(3)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -65910,6 +65917,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         axios.get("/profile/" + window.App.user.name + "/notifications").then(function (response) {
             return _this.notifications = response.data;
         });
+    },
+
+
+    methods: {
+        markAsRead: function markAsRead(notification) {
+            axios.delete('/profile/' + window.App.user.name + '/notifications/' + notification.id);
+        }
     }
 });
 
@@ -65933,15 +65947,16 @@ var render = function() {
           },
           _vm._l(_vm.notifications, function(notification) {
             return _c("div", [
-              _c(
-                "a",
-                {
-                  staticClass: "dropdown-item",
-                  attrs: { href: "#" },
-                  domProps: { textContent: _vm._s(notification.data.message) }
-                },
-                [_vm._v("foobar")]
-              )
+              _c("a", {
+                staticClass: "dropdown-item",
+                attrs: { href: "#" },
+                domProps: { textContent: _vm._s(notification.data.message) },
+                on: {
+                  click: function($event) {
+                    _vm.markAsRead(notification)
+                  }
+                }
+              })
             ])
           })
         )

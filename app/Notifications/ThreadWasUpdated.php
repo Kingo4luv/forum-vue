@@ -1,6 +1,7 @@
 <?php
 namespace App\Notifications;
 use Illuminate\Notifications\Notification;
+
 class ThreadWasUpdated extends Notification
 {
     /**
@@ -31,7 +32,7 @@ class ThreadWasUpdated extends Notification
      *
      * @return array
      */
-    public function via()
+    public function via($notifiable)
     {
         return ['database'];
     }
